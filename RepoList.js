@@ -1,24 +1,26 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 
 import { listRepos } from './reducer';
 
-class RepoList extends Component {
+class RepoList extends React.Component {
+
     componentDidMount() {
         this.props.listRepos('relferreira');
     }
+
     renderItem = ({ item }) => (
         <View style={styles.item}>
             <Text>{item.name}</Text>
         </View>
     );
+
     render() {
-        const { repos } = this.props;
         return (
             <FlatList
-                styles={styles.container}
-                data={repos}
+                styles={{ flex: 1 }}
+                data={this.props.repos}
                 renderItem={this.renderItem}
             />
         );
@@ -36,7 +38,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     let storedRepositories = state.repos.map(repo => ({ key: repo.id, ...repo }));
     return {
         repos: storedRepositories
@@ -47,4 +49,5 @@ const mapDispatchToProps = {
     listRepos
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RepoList);
+const List = connect(mapStateToProps, mapDispatchToProps)(RepoList);
+export default List;
